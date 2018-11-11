@@ -1,0 +1,21 @@
+Paper 1: Pugeault & Bowden
+
+a/e/m/n/s/t —> all fist like hang shape, only distinguished by thumb position
+thumb barely visible for m/t, makes it difficult
+sign is varied from person to person
+hand shape appearance widely vary depending on pose
+uses kinect
+
+Paper 2 : Dianna’s paper  https://arxiv.org/pdf/1710.06836.pdf
+
+"One of the reasons the fingerspelling alphabet plays such a vital role in sign language is that signers used it to spell out names of anything for which there is not a sign. 
+Attempts at using CNNs to handle the task of classifying images of ASL letter gestures have had some success [7], but using a pre-trained GoogLeNet architecture (only images)"
+padded and resized to 200200
+CNN used (2 conv layers, 1 max pool, drop out, two fully connected, drop out, output)
+background-subtraction techniques
+however did not generalize well on different datasets (skin color and lighting)
+5% increase by transforming data (rotating by 20 degrees + translating 20% on both axes)
+flipped images horizontally as we can sign using both hands
+Augmentation of the premade dataset improved performance by nearly 20
+most use gloves + kinect camera, but this one does not
+next time idea : structured PGMs ((e.g. the likelihood for the vowel ‘O’ to proceed the letter ‘J’)
