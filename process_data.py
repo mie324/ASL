@@ -26,6 +26,7 @@ def split_data(data, labels):
 
 def save_data(datasets):
     for i, dataset in enumerate(datasets):
+        data, labels = dataset
         name = names[i]
         np.save('data/' + name + '_data.npy', data)
         np.save('data/' + name + '_labels.npy', labels)
