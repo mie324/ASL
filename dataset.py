@@ -1,8 +1,8 @@
 import torch.utils.data as data
 
-class ASLDataset(data.dataset):
+class ASLDataset(data.Dataset):
     def __init__(self, X, y):
-        self.X = x
+        self.X = X
         self.y = y
 
     def __len__(self):
