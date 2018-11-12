@@ -19,3 +19,6 @@ flipped images horizontally as we can sign using both hands
 Augmentation of the premade dataset improved performance by nearly 20
 most use gloves + kinect camera, but this one does not
 next time idea : structured PGMs ((e.g. the likelihood for the vowel ‘O’ to proceed the letter ‘J’)
+
+Pretrained hand detection model:
+https://github.com/victordibia/handtracking (but in tensor flow)
