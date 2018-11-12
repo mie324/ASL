@@ -25,11 +25,10 @@ def split_data(data, labels):
     return (X_train, y_train), (X_val, y_val), (X_test, y_test)
 
 def save_data(datasets):
-    for dataset in datasets:
-        data, labels = dataset
-        for name in names:
-            np.save('data/' + name + '_data.npy', data)
-            np.save('data/' + name + '_labels.npy', labels)
+    for i, dataset in enumerate(datasets):
+        name = names[i]
+        np.save('data/' + name + '_data.npy', data)
+        np.save('data/' + name + '_labels.npy', labels)
 
 def counts(datasets):
     for  i, dataset in enumerate(datasets):
