@@ -4,6 +4,7 @@ import argparse
 from time import time
 
 from model import *
+from model_anna import * 
 from load_dataset import *
 
 def evaluate(model, val_loader, criterion):
@@ -16,12 +17,15 @@ def evaluate(model, val_loader, criterion):
 
     for i, data in enumerate(val_loader, 0):
         instances, labels = data
-        labels = labels.to(device)
-        labels = labels.type("torch.LongTensor")
-        instances = instances.to(device)
-        instances = instances.type('torch.FloatTensor')
-        labels = labels.squeeze(1)
+        if torch.cuda.is_available():
+            labels = labels.type("torch.cuda.LongTensor")
+            instances = instances.type("torch.cuda.FloatTensor")
+        else:
+            labels = labels.type("torch.LongTensor")    
+            instances = instances.type('torch.FloatTensor')
         outputs = model(instances)
+        labels = labels.squeeze(1)
+
         loss = criterion(outputs, labels)
         total_loss += loss.item()
         total_err += torch.sum(labels != outputs.argmax(dim=1)).item()
@@ -42,6 +46,12 @@ def train_model(batch_size, lr, epochs, decay, params):
     # model = model.double()
     if torch.cuda.is_available():
         model = model.cuda()
+    model = model.cuda()
+
+    model = Net()
+    if torch.cuda.is_available():
+        model = model.cuda()
+
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=decay)
 
@@ -68,9 +78,14 @@ def train_model(batch_size, lr, epochs, decay, params):
         for i, (instances, labels) in enumerate(train_loader, 0):
 
             labels = labels.to(device)
-            labels = labels.type("torch.LongTensor")
             instances = instances.to(device)
-            instances = instances.type('torch.FloatTensor')
+            if torch.cuda.is_available():
+                labels = labels.type("torch.cuda.LongTensor")
+                instances = instances.type("torch.cuda.FloatTensor")
+            else:
+                labels = laebls.type("torch.LongTensor")    
+                instances = instances.type('torch.FloatTensor')
+            #instances = instances.type('torch.FloatTensor')
 
             outputs = model(instances)
             labels = labels.squeeze(1)

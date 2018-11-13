@@ -22,19 +22,19 @@ class Net(nn.Module):
         self.conv2d_6   = nn.Conv2d(30,15, (3,3))
 
         ''' Linear Layer '''
-        self.fc1        = nn.Linear(6000, 1000)
-        self.drouput2   = nn.Dropout(0.4)
-        self.fc2        = nn.Linear(1000, 300)
-        self.fc3        = nn.Linear(300, 26+3) #letters in alphabet + space + point
+        self.fc1        = nn.Linear(240, 128 )
+        self.dropout2   = nn.Dropout(0.4)
+        self.fc2        = nn.Linear(128, 64)
+        self.fc3        = nn.Linear(64, 26+3) #letters in alphabet + space + point
 
 
     def forward(self, x):
 
         ''' First conv block '''
         x = F.relu(self.conv2d_1(x))
-        x = F.relu(self.conv2d_1(x))
+        x = F.relu(self.conv2d_2(x))
         x = self.maxpool(x)
-        x = self.dropout(x)
+        #x = self.dropout(x)
 
         ''' Second conv block '''
         x = F.relu(self.conv2d_3(x))
@@ -51,8 +51,8 @@ class Net(nn.Module):
         ''' Flatten and Fully Connect'''
         x = x.reshape(x.size(0),-1)
         x = F.relu(self.fc1(x))
-        x = self.dropout2(x)
+        #x = self.dropout2(x)
         x = F.relu(self.fc2(x))
-        x = self.drouput2(x)
+        #x = self.dropout2(x)
         x = self.fc3(x)
         return x
