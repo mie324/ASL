@@ -46,7 +46,6 @@ def train_model(batch_size, lr, epochs, decay, params):
     # model = model.double()
     if torch.cuda.is_available():
         model = model.cuda()
-    model = model.cuda()
 
     model = Net()
     if torch.cuda.is_available():
@@ -83,7 +82,7 @@ def train_model(batch_size, lr, epochs, decay, params):
                 labels = labels.type("torch.cuda.LongTensor")
                 instances = instances.type("torch.cuda.FloatTensor")
             else:
-                labels = laebls.type("torch.LongTensor")    
+                labels = labels.type("torch.LongTensor")
                 instances = instances.type('torch.FloatTensor')
             #instances = instances.type('torch.FloatTensor')
 

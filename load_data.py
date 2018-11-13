@@ -1,5 +1,6 @@
 import numpy as np
 import imageio
+import torchvision.transforms as transforms
 import os
 
 #del = 26, nothing = 27, space = 28
@@ -19,7 +20,9 @@ def load_data(path):
                 break
 
             image = imageio.imread(path + '/' + letter + '/' + sample)
-            image_data[index, ...] = image.transpose(2, 0, 1)
+            transform = transforms.ToTensor()
+            image_data[index, ...] = transform(image)
+
 
             if letter == "del":
                 label = 26
