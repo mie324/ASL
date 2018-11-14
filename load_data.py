@@ -5,8 +5,8 @@ import os
 
 #del = 26, nothing = 27, space = 28
 def load_data(path):
-    total_imgs = 29*500
-    image_data = np.empty((total_imgs, 3, 200, 200), dtype=np.uint8)
+    total_imgs = 29*200
+    image_data = np.empty((total_imgs, 3, 200, 200), dtype=np.float64)
     labels = np.empty((total_imgs,1), dtype=np.uint8)
     letters = os.listdir(path)
     print(len(letters))
@@ -16,12 +16,13 @@ def load_data(path):
         #only going to load 500 for each class for now
 
         for i, sample in enumerate(samples):
-            if i == 500:
+            if i == 200:
                 break
 
             image = imageio.imread(path + '/' + letter + '/' + sample)
-            transform = transforms.ToTensor()
-            image_data[index, ...] = transform(image)
+            image = np.transpose(image, (2, 0, 1))
+            image = image/255.0
+            image_data[index, ...] = image
 
 
             if letter == "del":
@@ -39,8 +40,8 @@ def load_data(path):
             index+= 1
         print(letter, ':', index)
 
-    np.save('data/image_data.npy', image_data)
-    np.save('data/image_labels.npy', labels)
+    np.save('data/image_data', image_data)
+    np.save('data/image_labels', labels)
 
 
 if __name__ == '__main__':

@@ -43,13 +43,13 @@ def train_model(batch_size, lr, epochs, decay, params):
     train_loader, val_loader = load_datasets(batch_size)
 
     model = ASLCNN()
-    # model = model.double()
+    model = model.double()
     if torch.cuda.is_available():
         model = model.cuda()
 
-    model = Net()
-    if torch.cuda.is_available():
-        model = model.cuda()
+    # model = Net()
+    # if torch.cuda.is_available():
+    #     model = model.cuda()
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=decay)
@@ -75,15 +75,16 @@ def train_model(batch_size, lr, epochs, decay, params):
         total_epoch = 0
 
         for i, (instances, labels) in enumerate(train_loader, 0):
-
+            labels = labels.long()
             labels = labels.to(device)
             instances = instances.to(device)
-            if torch.cuda.is_available():
-                labels = labels.type("torch.cuda.LongTensor")
-                instances = instances.type("torch.cuda.FloatTensor")
-            else:
-                labels = labels.type("torch.LongTensor")
-                instances = instances.type('torch.FloatTensor')
+
+            # if torch.cuda.is_available():
+            #     labels = labels.long()
+            #     # instances = instances.type("torch.cuda.FloatTensor")
+            # else:
+            #     labels = labels.long()
+                # instances = instances.type('torch.FloatTensor')
             #instances = instances.type('torch.FloatTensor')
 
             outputs = model(instances)
@@ -93,6 +94,7 @@ def train_model(batch_size, lr, epochs, decay, params):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            print(list(model.parameters())[0].grad)
 
             # corr = (outputs > 0.0).squeeze().long() != labels
             total_train_err += torch.sum(labels != outputs.argmax(dim=1)).item()
