@@ -21,7 +21,6 @@ class ASLCNN(nn.Module):
             nn.Linear(512, 64),
             nn.ReLU(),
             nn.Linear(64, self.output_size),
-            nn.Softmax()
         )
 
     def forward(self, x):

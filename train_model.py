@@ -17,12 +17,16 @@ def evaluate(model, val_loader, criterion):
 
     for i, data in enumerate(val_loader, 0):
         instances, labels = data
-        if torch.cuda.is_available():
-            labels = labels.type("torch.cuda.LongTensor")
-            instances = instances.type("torch.cuda.FloatTensor")
-        else:
-            labels = labels.type("torch.LongTensor")    
-            instances = instances.type('torch.FloatTensor')
+        labels = labels.long()
+        labels = labels.to(device)
+        instances = instances.to(device)
+        #if torch.cuda.is_available():
+        #    labels = labels.type("torch.cuda.LongTensor")
+        #    instances = instances.type("torch.cuda.FloatTensor")
+        #else:
+        #    labels = labels.type("torch.LongTensor")    
+        #    instances = instances.type('torch.FloatTensor')
+        
         outputs = model(instances)
         labels = labels.squeeze(1)
 
@@ -48,11 +52,13 @@ def train_model(batch_size, lr, epochs, decay, params):
         model = model.cuda()
 
     # model = Net()
+    # model = model.double()
     # if torch.cuda.is_available():
     #     model = model.cuda()
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=decay)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=decay)
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
 
     train_err = np.zeros(epochs)
     train_loss = np.zeros(epochs)
@@ -91,10 +97,15 @@ def train_model(batch_size, lr, epochs, decay, params):
             labels = labels.squeeze(1)
             loss = criterion(outputs, labels)
 
+            a = list(model.parameters())[0].clone()
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            print(list(model.parameters())[0].grad)
+            b = list(model.parameters())[0].clone()
+            if torch.equal(a.data, b.data):
+                print('wtf no change')
+                print(list(model.parameters())[0].grad)
+
 
             # corr = (outputs > 0.0).squeeze().long() != labels
             total_train_err += torch.sum(labels != outputs.argmax(dim=1)).item()

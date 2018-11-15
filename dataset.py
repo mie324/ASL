@@ -9,5 +9,4 @@ class ASLDataset(data.Dataset):
         return len(self.X)
 
     def __getitem__(self, index):
-        x = self.X[index]/255.0
-        return x, self.y[index]
+        return self.X[index], self.y[index]

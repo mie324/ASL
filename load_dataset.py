@@ -12,6 +12,7 @@ def load_datasets(batch_size):
 
     train_dataset = ASLDataset(train_data, train_labels)
     val_dataset = ASLDataset(val_data, val_labels)
+
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 
