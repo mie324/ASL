@@ -57,8 +57,8 @@ def train_model(batch_size, lr, epochs, decay, params):
     #     model = model.cuda()
 
     criterion = nn.CrossEntropyLoss()
-    # optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=decay)
-    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-03)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
     train_err = np.zeros(epochs)
     train_loss = np.zeros(epochs)
