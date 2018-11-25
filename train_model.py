@@ -47,18 +47,14 @@ def train_model(batch_size, lr, epochs, decay, params):
     train_loader, val_loader = load_datasets(batch_size)
 
     model = ASLCNN()
+    # model = Net()
     model = model.double()
     if torch.cuda.is_available():
         model = model.cuda()
 
-    # model = Net()
-    # model = model.double()
-    # if torch.cuda.is_available():
-    #     model = model.cuda()
-
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-03)
-    # optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-03)
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
     train_err = np.zeros(epochs)
     train_loss = np.zeros(epochs)
