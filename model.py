@@ -8,7 +8,7 @@ class ASLCNN(nn.Module):
         self.output_size = 29
 
         self.conv1 = nn.Sequential(
-            nn.Conv2d(3, 10, (5, 5), stride=2),
+            nn.Conv2d(3, 10, (5, 5), stride=1),
             nn.ReLU(),
             nn.Conv2d(10, 15, (10, 10), stride=2),
             nn.MaxPool2d((2,2)),
@@ -16,7 +16,7 @@ class ASLCNN(nn.Module):
         )
 
         self.linear = nn.Sequential(
-            nn.Linear(7260, 512),
+            nn.Linear(33135, 512),
             nn.ReLU(),
             nn.Linear(512, 64),
             nn.ReLU(),
