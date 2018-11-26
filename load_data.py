@@ -7,6 +7,7 @@ import os
 def load_data(path):
     num_samples = 25
     total_imgs = 29*num_samples
+
     image_data = np.empty((total_imgs, 3, 200, 200), dtype=np.float64)
     labels = np.empty((total_imgs,1), dtype=np.uint8)
     letters = os.listdir(path)
