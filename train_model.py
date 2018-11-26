@@ -6,6 +6,7 @@ from time import time
 from model import *
 from model_anna import * 
 from load_dataset import *
+from util import *
 
 def evaluate(model, val_loader, criterion):
     deviceType = "cuda" if torch.cuda.is_available() else "cpu"
@@ -20,13 +21,7 @@ def evaluate(model, val_loader, criterion):
         labels = labels.long()
         labels = labels.to(device)
         instances = instances.to(device)
-        #if torch.cuda.is_available():
-        #    labels = labels.type("torch.cuda.LongTensor")
-        #    instances = instances.type("torch.cuda.FloatTensor")
-        #else:
-        #    labels = labels.type("torch.LongTensor")    
-        #    instances = instances.type('torch.FloatTensor')
-        
+
         outputs = model(instances)
         labels = labels.squeeze(1)
 
@@ -39,7 +34,7 @@ def evaluate(model, val_loader, criterion):
     loss = float(total_loss) / (i+1)
     return err, loss
 
-def train_model(batch_size, lr, epochs, decay, params):
+def train_model(batch_size, lr, epochs, decay, params, path):
     torch.manual_seed(9)
     deviceType = "cuda" if torch.cuda.is_available() else "cpu"
     device = torch.device(deviceType)
@@ -48,6 +43,7 @@ def train_model(batch_size, lr, epochs, decay, params):
 
     model = ASLCNN()
     # model = Net()
+
     model = model.double()
     if torch.cuda.is_available():
         model = model.cuda()
@@ -81,14 +77,6 @@ def train_model(batch_size, lr, epochs, decay, params):
             labels = labels.to(device)
             instances = instances.to(device)
 
-            # if torch.cuda.is_available():
-            #     labels = labels.long()
-            #     # instances = instances.type("torch.cuda.FloatTensor")
-            # else:
-            #     labels = labels.long()
-                # instances = instances.type('torch.FloatTensor')
-            #instances = instances.type('torch.FloatTensor')
-
             outputs = model(instances)
             labels = labels.squeeze(1)
             loss = criterion(outputs, labels)
@@ -102,8 +90,6 @@ def train_model(batch_size, lr, epochs, decay, params):
                 print('wtf no change')
                 print(list(model.parameters())[0].grad)
 
-
-            # corr = (outputs > 0.0).squeeze().long() != labels
             total_train_err += torch.sum(labels != outputs.argmax(dim=1)).item()
             total_train_loss += loss.item()
             total_epoch += len(labels)
@@ -112,9 +98,9 @@ def train_model(batch_size, lr, epochs, decay, params):
         train_loss[epoch] = float(total_train_loss) / (i + 1)
         val_err[epoch], val_loss[epoch] = evaluate(model, val_loader, criterion)
 
-        # if val_err[epoch] < best_val_err:
-        #     saveModel(model, epoch, val_err[epoch], path)
-        #     best_val_err = val_err[epoch]
+        if val_err[epoch] < best_val_err:
+            save_model(model, epoch, val_err[epoch], path)
+            best_val_err = val_err[epoch]
 
         print("Epoch %d: Train err: %0.4f | Train loss: %0.4f | Val err: %0.4f | Val loss: %0.4f" % (epoch + 1,
                                                                                                      train_err[epoch],
@@ -125,8 +111,8 @@ def train_model(batch_size, lr, epochs, decay, params):
     end_time = time()
     elapsed_time = end_time - start_time
     print("Total time elapsed: {:.2f} seconds".format(elapsed_time))
-    # saveData(path, steps, train_err, train_loss, val_err, val_loss, params)
-    # plot(steps, val_err, train_err, params, path)
+    save_data(path, steps, train_err, train_loss, val_err, val_loss, params)
+    plot(steps, val_err, train_err, params, path)
     return model, steps, train_err, train_loss, val_err, val_loss
 
 def main():
@@ -135,31 +121,29 @@ def main():
     parser.add_argument('--lr', type=float, default=0.01)
     parser.add_argument('--epochs', type=int, default=25)
     parser.add_argument('--decay', type=float, default=1e-04)
-    parser.add_argument('--config', type=str, default='')
-    # parser.add_argument('--noisy', type=bool, default=False)
-    # parser.add_argument('--noisy_samples', type=int, default=10000)
-    # parser.add_argument('--noisy_eps', type=float, default=5e-2)
+    parser.add_argument('--config', type=str, default='configuration.json')
 
-    params = vars(parser.parse_args())
+    args = vars(parser.parse_args())
 
-    # if args['config'] != '':
-    #     params = load_config(args['config'])
-    #     print('config')
-    # else:
-    #     params = args
+    if args['config'] != '':
+        params = load_config(args['config'])
+        print('config')
+    else:
+        params = args
 
     batch_size = params['batch_size']
     lr = params['lr']
     epochs = params['epochs']
     decay = params['decay']
 
-    # path = getPath(params)
-    # copyFiles(path)
+    path = get_path(params)
+    copy_files(path)
     model, steps, train_err, train_loss, val_err, val_loss = train_model(batch_size,
                                                                         lr,
                                                                         epochs,
                                                                         decay,
-                                                                        params)
+                                                                        params,
+                                                                        path)
 
 if __name__ == '__main__':
     main()
