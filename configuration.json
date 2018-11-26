@@ -1,0 +1,6 @@
+{
+  "batch_size": 32,
+  "lr": 0.01,
+  "epochs": 5,
+  "decay": 1e-04
+}

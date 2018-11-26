@@ -5,7 +5,8 @@ import os
 
 #del = 26, nothing = 27, space = 28
 def load_data(path):
-    total_imgs = 29*50
+    num_samples = 25
+    total_imgs = 29*num_samples
     image_data = np.empty((total_imgs, 3, 200, 200), dtype=np.float64)
     labels = np.empty((total_imgs,1), dtype=np.uint8)
     letters = os.listdir(path)
@@ -16,7 +17,7 @@ def load_data(path):
         #only going to load 500 for each class for now
 
         for i, sample in enumerate(samples):
-            if i == 50:
+            if i == num_samples:
                 break
 
             image = imageio.imread(path + '/' + letter + '/' + sample)

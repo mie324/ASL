@@ -9,7 +9,6 @@ def load_datasets(batch_size):
     val_data = np.load('data/val_data.npy')
     val_labels = np.load('data/val_labels.npy')
 
-
     train_dataset = ASLDataset(train_data, train_labels)
     val_dataset = ASLDataset(val_data, val_labels)
 
