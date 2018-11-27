@@ -6,6 +6,7 @@ from shutil import copy
 import torch
 import pickle
 import json
+import PIL
 
 def plot(x, valid_acc, train_acc, args, path):
     train = 1.0 - savgol_filter(train_acc, 3, 2)
@@ -70,3 +71,8 @@ def save_data(path, steps, train_err, train_loss, val_err, val_loss, params):
 def copy_files(path):
     copy('model.py', path+'/')
     copy('configuration.json', path+'/')
+
+def display_image(path):
+    im = PIL.Image.open(path)
+    plt.imshow(im)
+    plt.show()

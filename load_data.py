@@ -15,7 +15,6 @@ def load_data(path):
     index = 0
     for letter in letters:
         samples = os.listdir(path+'/'+letter)
-        #only going to load 500 for each class for now
 
         for i, sample in enumerate(samples):
             if i == num_samples:
@@ -25,7 +24,6 @@ def load_data(path):
             image = np.transpose(image, (2, 0, 1))
             image = image/255.0
             image_data[index, ...] = image
-
 
             if letter == "del":
                 label = 26
