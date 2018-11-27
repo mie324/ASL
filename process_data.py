@@ -1,4 +1,16 @@
 import numpy as np
+import scipy.ndimage as ndimg
+import scipy.cluster.vq as whitener
+import matplotlib.pyplot as plt
+from PIL import ImageFilter
+from PIL import Image
+from PIL import ImageEnhance
+from scipy.misc import imsave
+
+brightener = ImageEnhance.Brightness
+contraster = ImageEnhance.Contrast
+sharpener = ImageEnhance.Sharpness
+colourer = ImageEnhance.Color
 
 from sklearn.model_selection import train_test_split
 
@@ -11,6 +23,14 @@ def load_data():
     labels = np.load('data/image_labels.npy')
 
     return data, labels
+
+def filter(data):
+    for img in data:
+        img = brightener(img).enhance(2.7)
+        img = contraster(img).enhance(0.5)
+        img = sharpener(img).enhance(2.3)
+        img = colourer(img).enhance(0.8)
+        img = img.filter(ImageFilter.EDGE_ENHANCE_MORE)
 
 def split_data(data, labels):
     X_train_val, X_test, y_train_val, y_test = train_test_split(data, labels,
