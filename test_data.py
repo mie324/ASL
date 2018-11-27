@@ -2,6 +2,8 @@ from PIL import Image
 import numpy as np
 import torch
 
+from load_dataset import *
+
 def load_model(path):
     model = torch.load(path, map_location='cpu')
     model = model.eval()
@@ -34,6 +36,23 @@ def predict_file(image_path, model_path):
 
     return letter
 
+def predict_test_set(model_path):
+    model = load_model(model_path)j
+    test_loader = load_test_dataset()
 
+    total_err = 0.0
+    total_epoch = 0
+    for i, data in enumerate(test_loader, 0):
+        input, labels = data
+        outputs = model(input)
+        labels = labels.long()
+        labels = labels.squeeze(1)
+
+        total_err += torch.sum(labels != outputs.argmax(dim=1)).item()
+        total_epoch += len(labels)
+
+    err = float(total_err)/total_epoch
+
+    print('Test Error: {:.2f}%'.format(err*100))
 
 

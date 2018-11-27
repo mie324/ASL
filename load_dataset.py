@@ -16,3 +16,13 @@ def load_datasets(batch_size):
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 
     return train_loader, val_loader
+
+def load_test_dataset():
+    test_data = np.load('data/test_data.npy')
+    test_labels = np.load('data/test_labels.npy')
+
+    test_dataset = ASLDataset(test_data, test_labels)
+    test_loader = DataLoader(test_dataset, batch_size=5, shuffle=False)
+
+    return test_loader
+
