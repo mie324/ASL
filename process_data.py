@@ -6,6 +6,7 @@ from PIL import ImageFilter
 from PIL import Image
 from PIL import ImageEnhance
 from scipy.misc import imsave
+import argparse
 
 brightener = ImageEnhance.Brightness
 contraster = ImageEnhance.Contrast
@@ -18,19 +19,11 @@ random_seed = 9
 
 names = ['train', 'val', 'test']
 
-def load_data():
-    data = np.load('data/image_data.npy')
-    labels = np.load('data/image_labels.npy')
+def load_data(filter):
+    data = np.load('data/image_data_' + str(filter) + '.npy')
+    labels = np.load('data/image_labels_' + str(filter) + '.npy')
 
     return data, labels
-
-def filter(data):
-    for img in data:
-        img = brightener(img).enhance(2.7)
-        img = contraster(img).enhance(0.5)
-        img = sharpener(img).enhance(2.3)
-        img = colourer(img).enhance(0.8)
-        img = img.filter(ImageFilter.EDGE_ENHANCE_MORE)
 
 def split_data(data, labels):
     X_train_val, X_test, y_train_val, y_test = train_test_split(data, labels,
@@ -44,12 +37,12 @@ def split_data(data, labels):
 
     return (X_train, y_train), (X_val, y_val), (X_test, y_test)
 
-def save_data(datasets):
+def save_data(datasets, filter):
     for i, dataset in enumerate(datasets):
         data, labels = dataset
         name = names[i]
-        np.save('data/' + name + '_data.npy', data)
-        np.save('data/' + name + '_labels.npy', labels)
+        np.save('data/' + name + '_data_' + str(filter) + '.npy', data)
+        np.save('data/' + name + '_labels_'+ str(filter) + '.npy', labels)
 
 def counts(datasets):
     for  i, dataset in enumerate(datasets):
@@ -61,9 +54,15 @@ def counts(datasets):
         print(value_counts)
 
 def main():
-    data, labels = load_data()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--filter', type=int, default=0)
+    args = vars(parser.parse_args())
+
+    filter = args['filter']
+
+    data, labels = load_data(filter)
     train, val, test = split_data(data, labels)
-    save_data((train, val, test))
+    save_data((train, val, test), filter)
     counts((train, val, test))
 
 if __name__ == "__main__":

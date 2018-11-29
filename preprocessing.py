@@ -28,7 +28,7 @@ def process_image(img_path, filter=0):
     elif filter == 2:
         img = whiten_enhance(img)
     elif filter == 3:
-        img = whiten_filters()
+        img = whiten_filters(img)
 
     img = np.transpose(img, (2, 0, 1))
     return img
