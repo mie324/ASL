@@ -3,11 +3,11 @@ from dataset import *
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 
-def load_datasets(batch_size):
-    train_data = np.load('data/train_data.npy')
-    train_labels = np.load('data/train_labels.npy')
-    val_data = np.load('data/val_data.npy')
-    val_labels = np.load('data/val_labels.npy')
+def load_datasets(batch_size, filter):
+    train_data = np.load('data/train_data_' + str(filter) + '.npy')
+    train_labels = np.load('data/train_labels_' + str(filter) + '.npy')
+    val_data = np.load('data/val_data_' + str(filter) + '.npy')
+    val_labels = np.load('data/val_labels_' + str(filter) +'.npy')
 
     train_dataset = ASLDataset(train_data, train_labels)
     val_dataset = ASLDataset(val_data, val_labels)

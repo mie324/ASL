@@ -34,12 +34,12 @@ def evaluate(model, val_loader, criterion):
     loss = float(total_loss) / (i+1)
     return err, loss
 
-def train_model(batch_size, lr, epochs, decay, params, path):
+def train_model(batch_size, lr, epochs, decay, filter, params, path):
     torch.manual_seed(9)
     deviceType = "cuda" if torch.cuda.is_available() else "cpu"
     device = torch.device(deviceType)
 
-    train_loader, val_loader = load_datasets(batch_size)
+    train_loader, val_loader = load_datasets(batch_size, filter)
 
     model = ASLCNN()
     # model = Net()
@@ -121,6 +121,7 @@ def main():
     parser.add_argument('--lr', type=float, default=0.01)
     parser.add_argument('--epochs', type=int, default=25)
     parser.add_argument('--decay', type=float, default=1e-04)
+    parser.add_argument('--filter', type=int, default=0)
     parser.add_argument('--config', type=str, default='configuration.json')
 
     args = vars(parser.parse_args())
@@ -135,6 +136,7 @@ def main():
     lr = params['lr']
     epochs = params['epochs']
     decay = params['decay']
+    filter = params['filter']
 
     path = get_path(params)
     copy_files(path)
@@ -142,6 +144,7 @@ def main():
                                                                         lr,
                                                                         epochs,
                                                                         decay,
+                                                                        filter,
                                                                         params,
                                                                         path)
 

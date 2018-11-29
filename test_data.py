@@ -3,6 +3,8 @@ import numpy as np
 import torch
 
 from load_dataset import *
+from util import *
+from preprocessing import *
 
 def load_model(path):
     model = torch.load(path, map_location='cpu')
@@ -21,7 +23,12 @@ def load_image(path):
 
 def predict_file(image_path, model_path):
     model = load_model(model_path)
-    image = load_image(image_path)
+    config = load_config(config_path)
+    try:
+        filter = config['filter']
+    except KeyError:
+        filter = 0
+    image = process_image(image_path, filter=filter)
 
     predictions = model(image)
     prediction = predictions.argmax(dim=1).item()
@@ -34,10 +41,10 @@ def predict_file(image_path, model_path):
     elif prediction == 28:
         letter = 'space'
 
-    return letter
+    return letter, predictions
 
 def predict_test_set(model_path):
-    model = load_model(model_path)j
+    model = load_model(model_path)
     test_loader = load_test_dataset()
 
     total_err = 0.0
@@ -54,5 +61,7 @@ def predict_test_set(model_path):
     err = float(total_err)/total_epoch
 
     print('Test Error: {:.2f}%'.format(err*100))
+
+
 
 
