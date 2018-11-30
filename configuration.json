@@ -3,5 +3,5 @@
   "lr": 0.01,
   "epochs": 25,
   "decay": 1e-04,
-  "filter": 0
+  "filter": 3
 }
