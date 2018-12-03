@@ -7,7 +7,7 @@ import argparse
 from preprocessing import *
 #del = 26, nothing = 27, space = 28
 def load_data(path, filter=0):
-    num_samples = 25
+    num_samples = 200
     total_imgs = 29*num_samples
 
     image_data = np.empty((total_imgs, 3, 200, 200), dtype=np.float64)

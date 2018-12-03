@@ -16,8 +16,8 @@ def load_datasets(batch_size, filter):
     train_data, train_labels = train
     val_data, val_labels = val
 
-    np.save('data/test_data_' + str(filter) + '.npy', data)
-    np.save('data/test_labels_' + str(filter) + '.npy', labels)
+    # np.save('data/test_data_' + str(filter) + '.npy', data)
+    # np.save('data/test_labels_' + str(filter) + '.npy', labels)
 
     train_dataset = ASLDataset(train_data, train_labels)
     val_dataset = ASLDataset(val_data, val_labels)

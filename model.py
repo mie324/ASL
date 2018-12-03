@@ -10,13 +10,16 @@ class ASLCNN(nn.Module):
         self.conv1 = nn.Sequential(
             nn.Conv2d(3, 10, (5, 5), stride=1),
             nn.ReLU(),
-            nn.Conv2d(10, 15, (10, 10), stride=2),
+            nn.Conv2d(10, 15, (10, 10), stride=1),
             nn.MaxPool2d((2,2)),
             nn.Dropout(p=0.25)
         )
 
+        # self.conv2 = nn.Sequential(
+        #     nn.Conv2d(15, (10, 10),
+
         self.linear = nn.Sequential(
-            nn.Linear(33135, 512),
+            nn.Linear(129735, 512),
             nn.ReLU(),
             nn.Linear(512, 64),
             nn.ReLU(),

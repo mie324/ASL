@@ -49,8 +49,8 @@ def train_model(batch_size, lr, epochs, decay, filter, params, path):
         model = model.cuda()
 
     criterion = nn.CrossEntropyLoss()
-    # optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-03)
-    optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, nesterov=True)
 
     train_err = np.zeros(epochs)
     train_loss = np.zeros(epochs)
@@ -88,7 +88,7 @@ def train_model(batch_size, lr, epochs, decay, filter, params, path):
             b = list(model.parameters())[0].clone()
             if torch.equal(a.data, b.data):
                 print('wtf no change')
-                print(list(model.parameters())[0].grad)
+                # print(list(model.parameters())[0].grad)
 
             total_train_err += torch.sum(labels != outputs.argmax(dim=1)).item()
             total_train_loss += loss.item()
