@@ -9,9 +9,10 @@ import json
 import PIL
 
 def plot(x, valid_acc, train_acc, args, path):
+    plt.clf()
     train = 1.0 - savgol_filter(train_acc, 3, 2)
     val = 1.0 - savgol_filter(valid_acc, 3, 2)
-    title = 'Batch Size: ' + str(args['batch_size']) + ' Learn. Rate: ' + str(args['lr'])
+    title = 'Training and Validation Accuracy: Batch Size =  ' + str(args['batch_size']) + ' Learn. Rate = ' + str(args['lr'])
     plt.title(title)
     plt.plot(x, train, label='Training')
     plt.plot(x, val, label='Validation')
@@ -19,8 +20,21 @@ def plot(x, valid_acc, train_acc, args, path):
     plt.ylabel('Accuracy')
     plt.ylim(0, 1.0)
     plt.legend(loc='best')
-    plt.savefig(path + '/' + 'bs_' + str(args['batch_size']) + '_lr_' + str(args['lr']) + '.png')
+    plt.savefig(path + '/accuracy.png')
     # plt.show()
+
+def plot_loss(x, val_loss, train_loss, args, path):
+    plt.clf()
+    train = savgol_filter(train_loss, 3, 2)
+    val = savgol_filter(val_loss, 3, 2)
+    title = 'Training and Validation Loss: Batch Size = ' + str(args['batch_size']) + ' Learn. Rate = ' + str(args['lr'])
+    plt.title(title)
+    plt.plot(x, train, label='Training')
+    plt.plot(x, val, label='Validation')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend(loc='best')
+    plt.savefig(path+'/loss.png')
 
 def get_path(params):
     file = 'models/model_num.json'
@@ -76,3 +90,16 @@ def display_image(path):
     im = PIL.Image.open(path)
     plt.imshow(im)
     plt.show()
+
+def training_plot(path, file):
+    f = open(path + '/' + file, 'rb')
+    data = pickle.load(f)
+    f.close()
+    train_loss = data['train_loss']
+    train_acc = data['train_err']
+    val_loss = data['val_loss']
+    val_acc = data['val_err']
+    steps = data['steps']
+    params = data['params']
+    plot(steps, val_acc, train_acc, params, path)
+    plot_loss(steps, val_loss, train_loss, params, path)

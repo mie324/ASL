@@ -19,6 +19,8 @@ row = 5
 
 def process_image(img_path, filter=0):
     img = Image.open(img_path)
+    img = img.resize((200,200), Image.ANTIALIAS)
+
     if filter == 0:
         img = np.array(img)
         img = img/255.0

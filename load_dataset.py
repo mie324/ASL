@@ -28,8 +28,8 @@ def load_datasets(batch_size, filter):
     return train_loader, val_loader
 
 def load_test_dataset():
-    test_data = np.load('data/test_data.npy')
-    test_labels = np.load('data/test_labels.npy')
+    test_data = np.load('data/test_data_0.npy')
+    test_labels = np.load('data/test_labels_0.npy')
 
     test_dataset = ASLDataset(test_data, test_labels)
     test_loader = DataLoader(test_dataset, batch_size=5, shuffle=False)
