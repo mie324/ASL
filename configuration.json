@@ -1,0 +1,7 @@
+{
+  "batch_size": 128,
+  "lr": 0.001,
+  "epochs": 25,
+  "decay": 1e-04,
+  "filter": 2
+}
